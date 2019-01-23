@@ -4,8 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Produto {
@@ -15,14 +15,13 @@ public class Produto {
 	private Integer id;
 	
 	@NotNull
-	@Max(50)
+	@Size(max = 50)
 	private String nome;
 	
-	@Max(255)
+	@Size(max = 255)
 	private String descricao;
 	
-	
-	@Max(50)
+	@Size(max = 50)
 	private String marca;
 	
 	@NotNull

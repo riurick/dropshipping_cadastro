@@ -1,4 +1,4 @@
-package com.dropshipping.fornecedor;
+package com.dropshipping.fornecedores;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,25 +9,22 @@ import org.springframework.stereotype.Service;
 
 import com.dropshipping.exception.RegraNegocioException;
 import com.dropshipping.exception.SampleEntityNotFoundException;
+import com.dropshipping.service.MessagesService;
 
 @Service
 public class FornecedorService {
-	public static final String FORNECEDOR_NAO_ECONTRADO = "Fornecedor não encontrado.";
-	public static final String CPF_JA_CADASTRADO = "CPF já cadastrado.";
-	public static final String EMAIL_JA_CADASTRADO = "E-mail já cadastrado.";
+	public static final String FORNECEDOR_NAO_ECONTRADO = "fornecedor.naoEncontrado";
+	public static final String CNPJ_JA_CADASTRADO = "cnpj.jaCadastrado";
 
 	@Autowired
 	FornecedorRepository fornecedorRepository;
 	
-	//@Autowired
-	//MessagesService messages;
+	@Autowired
+	MessagesService messages;
 	
 	public Fornecedor create(Fornecedor fornecedor) throws RegraNegocioException{
-		if (!fornecedorRepository.findByCpf(fornecedor.getCpf().trim()).isEmpty()) {
-			throw new RegraNegocioException(CPF_JA_CADASTRADO);
-		}
-		if (!fornecedorRepository.findByEmail(fornecedor.getEmail().trim()).isEmpty()) {
-			throw new RegraNegocioException(EMAIL_JA_CADASTRADO);
+		if (!fornecedorRepository.findByCnpj(fornecedor.getCnpj().trim()).isEmpty()) {
+			throw new RegraNegocioException(messages.get(CNPJ_JA_CADASTRADO));
 		}
 
 		return fornecedorRepository.save(fornecedor);
@@ -35,30 +32,22 @@ public class FornecedorService {
 
 	public Fornecedor update(Fornecedor fornecedor) throws RegraNegocioException, SampleEntityNotFoundException {
 		Optional<Fornecedor> existing = fornecedorRepository.findById(fornecedor.getId());
-		List<Fornecedor> lista = fornecedorRepository.findByCpf(fornecedor.getCpf().trim());
+		List<Fornecedor> lista = fornecedorRepository.findByCnpj(fornecedor.getCnpj().trim());
 		if (!lista.isEmpty() && !lista.get(0).getId().equals(fornecedor.getId())) {
-			throw new RegraNegocioException(CPF_JA_CADASTRADO);
-		}
-		lista = fornecedorRepository.findByEmail(fornecedor.getEmail().trim());
-		if (!lista.isEmpty() && !lista.get(0).getId().equals(fornecedor.getId())) {
-			throw new RegraNegocioException(EMAIL_JA_CADASTRADO);
+			throw new RegraNegocioException(messages.get(CNPJ_JA_CADASTRADO));
 		}
 		if (existing.isPresent()) {
 			return fornecedorRepository.save(fornecedor);
 		} else {
-			throw new SampleEntityNotFoundException(FORNECEDOR_NAO_ECONTRADO);
+			throw new SampleEntityNotFoundException(messages.get(FORNECEDOR_NAO_ECONTRADO));
 		}
 	}
-
-	/*public Page<Cliente> getAll(Pageable pageable) {
-		return assuntoRepository.findAll(pageable);
-	}*/
 
 	public void delete(Integer id) throws SampleEntityNotFoundException {
 		try {
 			fornecedorRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new SampleEntityNotFoundException(FORNECEDOR_NAO_ECONTRADO);
+			throw new SampleEntityNotFoundException(messages.get(FORNECEDOR_NAO_ECONTRADO));
 		}
 	}
 
@@ -67,8 +56,12 @@ public class FornecedorService {
 		if (t.isPresent()) {
 			return t.get();
 		} else {
-			throw new SampleEntityNotFoundException(FORNECEDOR_NAO_ECONTRADO);
+			throw new SampleEntityNotFoundException(messages.get(FORNECEDOR_NAO_ECONTRADO));
 		}
+	}
+
+	public List<Fornecedor> getAll() {
+		return fornecedorRepository.findAll();
 	}
 
 }

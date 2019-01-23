@@ -1,12 +1,11 @@
 package com.dropshipping.clientes;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.dropshipping.exception.RegraNegocioException;
+import com.dropshipping.exception.SampleEntityNotFoundException;
+import com.dropshipping.response.MessageType;
+import com.dropshipping.response.ServiceMessage;
+import com.dropshipping.response.ServiceResponse;
+import com.dropshipping.service.MessagesService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -28,15 +34,18 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Clientes")
 public class ClienteController {
 	
+	public static final String CLIENTE_CRIADO = "cliente.criado";
+	public static final String CLIENTE_ATUALIZADO = "cliente.atualizado";
+	public static final String CLIENTE_DELETADO = "cliente.deletado";
 	@Autowired
 	ClienteService clienteService;
 	
-//	@Autowired
-//	private MessagesService messages;
+	@Autowired
+	private MessagesService messages;
 	
 	@PostMapping
-	// @ApiOperation(value = "Cria um assunto")
-	public ResponseEntity<ServiceResponse<Cliente>> create(@RequestBody @Valid Cliente cliente) {
+	@ApiOperation(value = "Cria um assunto")
+	public ResponseEntity<ServiceResponse<Cliente>> create(@RequestBody @Valid Cliente cliente) throws RegraNegocioException {
 
 		cliente = clienteService.create(cliente);
 
@@ -46,51 +55,49 @@ public class ClienteController {
 				.toUri();
 		headers.setLocation(location);
 
-		//ServiceMessage message = new ServiceMessage(messages.get("assunto.criado"));
+		ServiceMessage message = new ServiceMessage(messages.get(CLIENTE_CRIADO));
 
-		return new ResponseEntity<>(new ServiceResponse<>(cliente, "Cliente criado com sucesso"), headers, HttpStatus.CREATED);
+		return new ResponseEntity<>(new ServiceResponse<>(cliente, message), headers, HttpStatus.CREATED);
 	}
 
-	// http://localhost:8080/api/v1/assuntos/1
 	@ApiOperation(value = "Detalha um cliente pelo ID", notes = "Um ID válido deve ser informado", response = Cliente.class)
 	@GetMapping("/{id}")
-	public ResponseEntity<ServiceResponse<Cliente>> findById(@PathVariable Integer id) {
-		return ResponseEntity.ok(new ServiceResponse<>(clienteService.getAssuntoPorId(id)));
+	public ResponseEntity<ServiceResponse<Cliente>> findById(@PathVariable Integer id) throws SampleEntityNotFoundException {
+		return ResponseEntity.ok(new ServiceResponse<>(clienteService.findById(id)));
 	}
 
-	// http://localhost:8080/api/v1/assuntos
-//	@GetMapping
-//	@ApiOperation(value = "Lista", response = Assunto.class)
-//	public ServiceResponse<Page<Assunto>> listassuntosPaginado(Pageable pageable) {
-//		return new ServiceResponse<>(clienteService.getAllAssuntos(pageable));
-//	}
+	@GetMapping
+	@ApiOperation(value = "Lista", response = Cliente.class)
+	public ServiceResponse<List<Cliente>> listassuntosPaginado() {
+		return new ServiceResponse<>(clienteService.getAll());
+	}
 
 	@PutMapping("/{id}")
 	@ApiOperation(value = "Altera os dados do cliente informado", notes = "Um ID válido deve ser informado", response = Cliente.class)
 	public ResponseEntity<ServiceResponse<Cliente>> update(@PathVariable Integer id,
-			@Valid @RequestBody Cliente cliente) {
+			@Valid @RequestBody Cliente cliente) throws RegraNegocioException, SampleEntityNotFoundException {
 		if (!cliente.getId().equals(id)) {
 			return new ResponseEntity<>(
 					new ServiceResponse<>(null,
 							new ServiceMessage(MessageType.ERROR, "URL ID: '" + id
-									+ "CLiente não corresponde" + cliente.getId() + "'.")),
+									+ " CLiente não corresponde " + cliente.getId() + "'.")),
 					HttpStatus.BAD_REQUEST);
 		}
 
-		//ServiceMessage message = new ServiceMessage(messages.get("assunto.atualizado"));
+		ServiceMessage message = new ServiceMessage(messages.get(CLIENTE_ATUALIZADO));
 
-		return new ResponseEntity<>(new ServiceResponse<>(clienteService.updateAssunto(cliente), "Cadastro atualizado.,"),
+		return new ResponseEntity<>(new ServiceResponse<>(clienteService.update(cliente), message),
 				HttpStatus.OK);
 
 	}
 
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Apaga um cliente pelo id", notes = "Um id válido deve ser informado", response = Cliente.class)
-	public ResponseEntity<ServiceResponse<Void>> deleteassunto(@PathVariable Integer id) {
-		clienteService.deleteAssunto(id);
-		//ServiceMessage message = new ServiceMessage(messages.get("assunto.deletado"));
+	public ResponseEntity<ServiceResponse<Void>> deleteassunto(@PathVariable Integer id) throws SampleEntityNotFoundException {
+		clienteService.delete(id);
+		ServiceMessage message = new ServiceMessage(messages.get(CLIENTE_DELETADO));
 
-		return new ResponseEntity<>(new ServiceResponse<>("Cliente excluído com sucesso."), HttpStatus.OK);
+		return new ResponseEntity<>(new ServiceResponse<>(message), HttpStatus.OK);
 	}
 
 }
