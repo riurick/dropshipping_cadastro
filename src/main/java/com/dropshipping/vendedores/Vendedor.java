@@ -12,6 +12,8 @@ public class Vendedor {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Integer id;
+	
 	@NotNull
 	@Size(max = 50)
 	private String nome;
@@ -69,6 +71,14 @@ public class Vendedor {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }
