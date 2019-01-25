@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.dropshipping.enderecos.EnderecoRepository;
 import com.dropshipping.exception.RegraNegocioException;
 import com.dropshipping.exception.SampleEntityNotFoundException;
 import com.dropshipping.service.MessagesService;
@@ -20,13 +21,17 @@ public class FornecedorService {
 	FornecedorRepository fornecedorRepository;
 	
 	@Autowired
+	EnderecoRepository enderecoRepository;
+	
+	@Autowired
 	MessagesService messages;
 	
 	public Fornecedor create(Fornecedor fornecedor) throws RegraNegocioException{
 		if (!fornecedorRepository.findByCnpj(fornecedor.getCnpj().trim()).isEmpty()) {
 			throw new RegraNegocioException(messages.get(CNPJ_JA_CADASTRADO));
 		}
-
+		//Cadastrando endereço
+		fornecedor.setEndereco(enderecoRepository.save(fornecedor.getEndereco()));
 		return fornecedorRepository.save(fornecedor);
 	}
 
@@ -37,6 +42,7 @@ public class FornecedorService {
 			throw new RegraNegocioException(messages.get(CNPJ_JA_CADASTRADO));
 		}
 		if (existing.isPresent()) {
+			enderecoRepository.save(fornecedor.getEndereco());
 			return fornecedorRepository.save(fornecedor);
 		} else {
 			throw new SampleEntityNotFoundException(messages.get(FORNECEDOR_NAO_ECONTRADO));
@@ -46,6 +52,7 @@ public class FornecedorService {
 	public void delete(Integer id) throws SampleEntityNotFoundException {
 		try {
 			fornecedorRepository.deleteById(id);
+			enderecoRepository.delete(fornecedorRepository.findById(id).get().getEndereco());
 		} catch (EmptyResultDataAccessException e) {
 			throw new SampleEntityNotFoundException(messages.get(FORNECEDOR_NAO_ECONTRADO));
 		}

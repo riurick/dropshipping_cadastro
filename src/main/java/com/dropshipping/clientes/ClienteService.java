@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.dropshipping.enderecos.Endereco;
+import com.dropshipping.enderecos.EnderecoRepository;
 import com.dropshipping.exception.RegraNegocioException;
 import com.dropshipping.exception.SampleEntityNotFoundException;
 import com.dropshipping.service.MessagesService;
@@ -24,6 +26,10 @@ public class ClienteService {
 	ClienteRepository clienteRepository;
 	
 	@Autowired
+	EnderecoRepository enderecoRepository;
+	
+	
+	@Autowired
 	MessagesService messages;
 	
 	public Cliente create(Cliente cliente) throws RegraNegocioException{
@@ -33,7 +39,10 @@ public class ClienteService {
 		if (!clienteRepository.findByEmail(cliente.getEmail().trim()).isEmpty()) {
 			throw new RegraNegocioException(messages.get(EMAIL_JA_CADASTRADO));
 		}
-
+		//Cadastrando endereço
+		Endereco e = cliente.getEndereco();
+		e = enderecoRepository.save(cliente.getEndereco());
+		cliente.setEndereco(e);
 		return clienteRepository.save(cliente);
 	}
 
@@ -48,6 +57,7 @@ public class ClienteService {
 			throw new RegraNegocioException(messages.get(EMAIL_JA_CADASTRADO));
 		}
 		if (existing.isPresent()) {
+			enderecoRepository.save(cliente.getEndereco());
 			return clienteRepository.save(cliente);
 		} else {
 			throw new SampleEntityNotFoundException(messages.get(CLIENTE_NAO_ECONTRADO));
@@ -57,6 +67,7 @@ public class ClienteService {
 	public void delete(Integer id) throws SampleEntityNotFoundException {
 		try {
 			clienteRepository.deleteById(id);
+			enderecoRepository.delete(clienteRepository.findById(id).get().getEndereco());
 		} catch (EmptyResultDataAccessException e) {
 			throw new SampleEntityNotFoundException(messages.get(CLIENTE_NAO_ECONTRADO));
 		}
