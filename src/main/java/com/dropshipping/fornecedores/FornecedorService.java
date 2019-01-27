@@ -11,11 +11,13 @@ import com.dropshipping.enderecos.EnderecoRepository;
 import com.dropshipping.exception.RegraNegocioException;
 import com.dropshipping.exception.SampleEntityNotFoundException;
 import com.dropshipping.service.MessagesService;
+import com.dropshipping.util.ValidaCNPJ;
 
 @Service
 public class FornecedorService {
 	public static final String FORNECEDOR_NAO_ECONTRADO = "fornecedor.naoEncontrado";
 	public static final String CNPJ_JA_CADASTRADO = "cnpj.jaCadastrado";
+	public static final String CNPJ_INVALIDO = "cnpj.invalido";
 
 	@Autowired
 	FornecedorRepository fornecedorRepository;
@@ -27,9 +29,7 @@ public class FornecedorService {
 	MessagesService messages;
 	
 	public Fornecedor create(Fornecedor fornecedor) throws RegraNegocioException{
-		if (!fornecedorRepository.findByCnpj(fornecedor.getCnpj().trim()).isEmpty()) {
-			throw new RegraNegocioException(messages.get(CNPJ_JA_CADASTRADO));
-		}
+		validaFornecedor(fornecedor);
 		//Cadastrando endereço
 		fornecedor.setEndereco(enderecoRepository.save(fornecedor.getEndereco()));
 		return fornecedorRepository.save(fornecedor);
@@ -37,10 +37,7 @@ public class FornecedorService {
 
 	public Fornecedor update(Fornecedor fornecedor) throws RegraNegocioException, SampleEntityNotFoundException {
 		Optional<Fornecedor> existing = fornecedorRepository.findById(fornecedor.getId());
-		List<Fornecedor> lista = fornecedorRepository.findByCnpj(fornecedor.getCnpj().trim());
-		if (!lista.isEmpty() && !lista.get(0).getId().equals(fornecedor.getId())) {
-			throw new RegraNegocioException(messages.get(CNPJ_JA_CADASTRADO));
-		}
+		validaFornecedor(fornecedor);
 		if (existing.isPresent()) {
 			enderecoRepository.save(fornecedor.getEndereco());
 			return fornecedorRepository.save(fornecedor);
@@ -69,6 +66,15 @@ public class FornecedorService {
 
 	public List<Fornecedor> getAll() {
 		return fornecedorRepository.findAll();
+	}
+	
+	public void validaFornecedor(Fornecedor fornecedor) throws RegraNegocioException {
+		if (!fornecedorRepository.findByCnpj(fornecedor.getCnpj().trim()).isEmpty()) {
+			throw new RegraNegocioException(messages.get(CNPJ_JA_CADASTRADO));
+		}
+		if(!ValidaCNPJ.isCNPJ(fornecedor.getCnpj())) {
+			throw new RegraNegocioException(CNPJ_INVALIDO);
+		}
 	}
 
 }

@@ -40,5 +40,45 @@ public class Imagem {
 	@JoinColumn(name="propaganda_id")
 	@Fetch(FetchMode.JOIN)
 	private Propaganda propaganda;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(String arquivo) {
+		this.arquivo = arquivo;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+
+	public Propaganda getPropaganda() {
+		return propaganda;
+	}
+
+	public void setPropaganda(Propaganda propaganda) {
+		this.propaganda = propaganda;
+	}
 	
 }

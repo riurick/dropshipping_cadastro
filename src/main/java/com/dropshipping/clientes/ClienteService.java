@@ -12,6 +12,8 @@ import com.dropshipping.enderecos.EnderecoRepository;
 import com.dropshipping.exception.RegraNegocioException;
 import com.dropshipping.exception.SampleEntityNotFoundException;
 import com.dropshipping.service.MessagesService;
+import com.dropshipping.util.ValidaEmail;
+import com.dropshipping.util.ValidacaoCpfUtil;
 
 
 
@@ -21,6 +23,8 @@ public class ClienteService {
 	public static final String CLIENTE_NAO_ECONTRADO = "cliente.naoEncontrado";
 	public static final String CPF_JA_CADASTRADO = "cpf.jaCadastrado";
 	public static final String EMAIL_JA_CADASTRADO = "email.jaCadastrado";
+	public static final String CPF_INVALIDO = "cpf.invalido";
+	public static final String EMAIL_INVALIDO = "email.invalido";
 
 	@Autowired
 	ClienteRepository clienteRepository;
@@ -33,12 +37,7 @@ public class ClienteService {
 	MessagesService messages;
 	
 	public Cliente create(Cliente cliente) throws RegraNegocioException{
-		if (!clienteRepository.findByCpf(cliente.getCpf().trim()).isEmpty()) {
-			throw new RegraNegocioException(messages.get(CPF_JA_CADASTRADO));
-		}
-		if (!clienteRepository.findByEmail(cliente.getEmail().trim()).isEmpty()) {
-			throw new RegraNegocioException(messages.get(EMAIL_JA_CADASTRADO));
-		}
+		validaCliente(cliente);
 		//Cadastrando endereço
 		Endereco e = cliente.getEndereco();
 		e = enderecoRepository.save(cliente.getEndereco());
@@ -48,14 +47,7 @@ public class ClienteService {
 
 	public Cliente update(Cliente cliente) throws RegraNegocioException, SampleEntityNotFoundException {
 		Optional<Cliente> existing = clienteRepository.findById(cliente.getId());
-		List<Cliente> lista = clienteRepository.findByCpf(cliente.getCpf().trim());
-		if (!lista.isEmpty() && !lista.get(0).getId().equals(cliente.getId())) {
-			throw new RegraNegocioException(messages.get(CPF_JA_CADASTRADO));
-		}
-		lista = clienteRepository.findByEmail(cliente.getEmail().trim());
-		if (!lista.isEmpty() && !lista.get(0).getId().equals(cliente.getId())) {
-			throw new RegraNegocioException(messages.get(EMAIL_JA_CADASTRADO));
-		}
+		validaCliente(cliente);
 		if (existing.isPresent()) {
 			enderecoRepository.save(cliente.getEndereco());
 			return clienteRepository.save(cliente);
@@ -84,6 +76,21 @@ public class ClienteService {
 
 	public List<Cliente> getAll() {
 		return clienteRepository.findAll();
+	}
+	
+	public void validaCliente(Cliente cliente) throws RegraNegocioException {
+		if (!clienteRepository.findByCpf(cliente.getCpf().trim()).isEmpty()) {
+			throw new RegraNegocioException(messages.get(CPF_JA_CADASTRADO));
+		}
+		if (!clienteRepository.findByEmail(cliente.getEmail().trim()).isEmpty()) {
+			throw new RegraNegocioException(messages.get(EMAIL_JA_CADASTRADO));
+		}
+		if(!ValidacaoCpfUtil.isValidCPF(cliente.getCpf())) {
+			throw new RegraNegocioException(messages.get(CPF_INVALIDO));
+		}
+		if(!ValidaEmail.validar(cliente.getEmail())) {
+			throw new RegraNegocioException(messages.get(EMAIL_INVALIDO));
+		}
 	}
 
 }
