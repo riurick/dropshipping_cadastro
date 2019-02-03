@@ -44,7 +44,7 @@ public class ClienteController {
 	private MessagesService messages;
 	
 	@PostMapping
-	@ApiOperation(value = "Cria um assunto")
+	@ApiOperation(value = "Cria um cliente")
 	public ResponseEntity<ServiceResponse<Cliente>> create(@RequestBody @Valid Cliente cliente) throws RegraNegocioException {
 
 		cliente = clienteService.create(cliente);
@@ -68,7 +68,7 @@ public class ClienteController {
 
 	@GetMapping
 	@ApiOperation(value = "Lista", response = Cliente.class)
-	public ServiceResponse<List<Cliente>> listassuntosPaginado() {
+	public ServiceResponse<List<Cliente>> lista() {
 		return new ServiceResponse<>(clienteService.getAll());
 	}
 
@@ -93,7 +93,7 @@ public class ClienteController {
 
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Apaga um cliente pelo id", notes = "Um id válido deve ser informado", response = Cliente.class)
-	public ResponseEntity<ServiceResponse<Void>> deleteassunto(@PathVariable Integer id) throws SampleEntityNotFoundException {
+	public ResponseEntity<ServiceResponse<Void>> delete(@PathVariable Integer id) throws SampleEntityNotFoundException {
 		clienteService.delete(id);
 		ServiceMessage message = new ServiceMessage(messages.get(CLIENTE_DELETADO));
 
