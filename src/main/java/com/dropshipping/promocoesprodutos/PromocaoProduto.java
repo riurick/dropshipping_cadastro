@@ -1,6 +1,4 @@
-package com.dropshipping.propagandas;
-
-import java.util.Date;
+package com.dropshipping.promocoesprodutos;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,22 +12,26 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.dropshipping.produtos.Produto;
 import com.dropshipping.promocoes.Promocao;
 
 @Entity
-public class Propaganda {
-	
+public class PromocaoProduto {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NotNull
-	private Date validade;
-	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="promocao_id")
 	@Fetch(FetchMode.JOIN)
+	@NotNull
 	private Promocao promocao;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="produto_id")
+	@Fetch(FetchMode.JOIN)
+	@NotNull
+	private Produto produto;
 
 	public Integer getId() {
 		return id;
@@ -39,14 +41,6 @@ public class Propaganda {
 		this.id = id;
 	}
 
-	public Date getValidade() {
-		return validade;
-	}
-
-	public void setValidade(Date validade) {
-		this.validade = validade;
-	}
-
 	public Promocao getPromocao() {
 		return promocao;
 	}
@@ -54,4 +48,13 @@ public class Propaganda {
 	public void setPromocao(Promocao promocao) {
 		this.promocao = promocao;
 	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+	
 }

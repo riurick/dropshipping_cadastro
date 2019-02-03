@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dropshipping.exception.RegraNegocioException;
@@ -53,6 +55,11 @@ public class ProdutoService {
 
 	public List<Produto> getAll() {
 		return produtoRepository.findAll();
+	}
+	
+	public Page<Produto> findByFiltro(String nome, String descricao, String marca, Pageable pageable){
+		return produtoRepository.findByFiltro(nome == null ? "" : nome, descricao == null ? "" : descricao,
+				marca == null ? "" : marca, pageable);
 	}
 
 }

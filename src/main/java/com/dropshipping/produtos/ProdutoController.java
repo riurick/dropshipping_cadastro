@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -99,5 +102,14 @@ public class ProdutoController {
 		ServiceMessage message = new ServiceMessage(messages.get(PRODUTO_DELETADO));
 
 		return new ResponseEntity<>(new ServiceResponse<>(message), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "Pagina produto por filtro", response = Produto.class)
+	@GetMapping("/filtro")
+	public ServiceResponse<Page<Produto>> findByFiltro(@RequestParam(value = "nome", required = false) String nome,
+			@RequestParam(value = "descricao", required = false) String descricao,
+			@RequestParam(value = "marca", required = false) String marca, Pageable pageable) throws SampleEntityNotFoundException {
+		Page<Produto> page = produtoService.findByFiltro(nome, descricao, marca, pageable);
+		return new ServiceResponse<>(page);
 	}
 }
