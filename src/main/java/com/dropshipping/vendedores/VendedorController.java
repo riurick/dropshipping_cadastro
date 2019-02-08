@@ -72,7 +72,7 @@ public class VendedorController {
 	}
 
 	@PutMapping("/{id}")
-	@ApiOperation(value = "Altera os dados do cliente informado", notes = "Um ID válido deve ser informado", response = Vendedor.class)
+	@ApiOperation(value = "Altera os dados do vendedor informado", notes = "Um ID válido deve ser informado", response = Vendedor.class)
 	public ResponseEntity<ServiceResponse<Vendedor>> update(@PathVariable Integer id,
 			@Valid @RequestBody Vendedor vendedor) throws RegraNegocioException, SampleEntityNotFoundException {
 		if (!vendedor.getId().equals(id)) {
@@ -92,7 +92,7 @@ public class VendedorController {
 
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Apaga um vendedor pelo id", notes = "Um id válido deve ser informado", response = Vendedor.class)
-	public ResponseEntity<ServiceResponse<Void>> deleteassunto(@PathVariable Integer id) throws SampleEntityNotFoundException {
+	public ResponseEntity<ServiceResponse<Void>> delete(@PathVariable Integer id) throws SampleEntityNotFoundException {
 		vendedorService.delete(id);
 		ServiceMessage message = new ServiceMessage(messages.get(VENDEDOR_DELETADO));
 
