@@ -30,7 +30,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/api/v1/fornecedores")
+@RequestMapping("/api/v1/fornecedor")
 @Api(value = "Fornecedores")
 public class FornecedorController {
 

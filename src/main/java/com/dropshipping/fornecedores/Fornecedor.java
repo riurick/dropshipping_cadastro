@@ -39,6 +39,16 @@ public class Fornecedor {
 	@Fetch(FetchMode.JOIN)
 	@NotNull
 	private Endereco endereco;
+	
+	@Size(max = 50)
+	private String email;
+	
+	@Size(max = 12)
+	private String telefone;
+	
+	@NotNull
+	@Size(max = 8)
+	private String senha;
 
 	public Integer getId() {
 		return id;
@@ -78,6 +88,30 @@ public class Fornecedor {
 
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 	
 	
