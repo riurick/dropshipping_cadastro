@@ -11,19 +11,29 @@ import org.springframework.stereotype.Service;
 
 import com.dropshipping.exception.RegraNegocioException;
 import com.dropshipping.exception.SampleEntityNotFoundException;
+import com.dropshipping.fornecedores.Fornecedor;
+import com.dropshipping.fornecedores.FornecedorRepository;
 import com.dropshipping.service.MessagesService;
 
 @Service
 public class ProdutoService {
 	public static final String PRODUTO_NAO_ECONTRADO = "produto.naoEncontrado";
+	public static final String FORNECEDOR_NAO_ENCONTRADO = "fornecedor.naoEncontrado";
 
 	@Autowired
 	ProdutoRepository produtoRepository;
 	
 	@Autowired
+	FornecedorRepository fornecedorRepoisoty;
+	
+	@Autowired
 	MessagesService messages;
 	
-	public Produto create(Produto produto) throws RegraNegocioException{
+	public Produto create(Produto produto) throws RegraNegocioException, SampleEntityNotFoundException{
+		
+		if(!fornecedorRepoisoty.findById(produto.getFornecedor().getId()).isPresent()) {
+			throw new SampleEntityNotFoundException(messages.get(FORNECEDOR_NAO_ENCONTRADO));
+		}
 		return produtoRepository.save(produto);
 	}
 
@@ -60,6 +70,12 @@ public class ProdutoService {
 	public Page<Produto> findByFiltro(String nome, String descricao, String marca, Pageable pageable){
 		return produtoRepository.findByFiltro(nome == null ? "" : nome, descricao == null ? "" : descricao,
 				marca == null ? "" : marca, pageable);
+	}
+	
+	public Page<Produto> findByFornecedor(Integer id, Pageable pageable){
+		Fornecedor f = new Fornecedor();
+		f.setId(id);
+		return produtoRepository.findByFornecedor(f, pageable);
 	}
 
 }

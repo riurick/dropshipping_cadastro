@@ -49,7 +49,7 @@ public class ProdutoController {
 	
 	@PostMapping
 	@ApiOperation(value = "Cria um produto")
-	public ResponseEntity<ServiceResponse<Produto>> create(@RequestBody @Valid Produto produto) throws RegraNegocioException {
+	public ResponseEntity<ServiceResponse<Produto>> create(@RequestBody @Valid Produto produto) throws RegraNegocioException, SampleEntityNotFoundException {
 
 		produto = produtoService.create(produto);
 
@@ -97,11 +97,17 @@ public class ProdutoController {
 
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Apaga um Produto pelo id", notes = "Um id válido deve ser informado", response = Produto.class)
-	public ResponseEntity<ServiceResponse<Void>> deleteassunto(@PathVariable Integer id) throws SampleEntityNotFoundException {
+	public ResponseEntity<ServiceResponse<Void>> delete(@PathVariable Integer id) throws SampleEntityNotFoundException {
 		produtoService.delete(id);
 		ServiceMessage message = new ServiceMessage(messages.get(PRODUTO_DELETADO));
 
 		return new ResponseEntity<>(new ServiceResponse<>(message), HttpStatus.OK);
+	}
+	
+	@GetMapping("/porFornecedor/{id}")
+	@ApiOperation(value = "Lista produtos por fornecedor", notes = "Um id válido deve ser informado", response = Produto.class)
+	public ServiceResponse<Page<Produto>> listaPorFornecedor(@PathVariable Integer id, Pageable pageable){
+		return new ServiceResponse<>(produtoService.findByFornecedor(id, pageable));
 	}
 	
 	@ApiOperation(value = "Pagina produto por filtro", response = Produto.class)
