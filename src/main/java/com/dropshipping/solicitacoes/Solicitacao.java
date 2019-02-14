@@ -46,7 +46,7 @@ public class Solicitacao {
 	
 	@NotNull
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="statussolicitacao_id")
+	@JoinColumn(name="status_solicitacao_id")
 	@Fetch(FetchMode.JOIN)
 	private StatusSolicitacao statussolicitacao;
 
