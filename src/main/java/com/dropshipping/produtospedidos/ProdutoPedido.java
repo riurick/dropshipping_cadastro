@@ -1,5 +1,6 @@
 package com.dropshipping.produtospedidos;
 
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +15,7 @@ import org.hibernate.annotations.FetchMode;
 import com.dropshipping.pedidos.Pedido;
 import com.dropshipping.produtos.Produto;
 
+@Entity
 public class ProdutoPedido {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
