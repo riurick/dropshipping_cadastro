@@ -1,6 +1,8 @@
 package com.dropshipping.imagens;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.dropshipping.exception.RegraNegocioException;
@@ -43,17 +47,11 @@ public class ImagemController {
 	
 	@PostMapping
 	@ApiOperation(value = "Cria uma imagem")
-	public ResponseEntity<ServiceResponse<Imagem>> create(@RequestBody @Valid Imagem imagem) throws RegraNegocioException {
+	public ResponseEntity<ServiceResponse<List<Imagem>>> create(@RequestParam(value="files") List<MultipartFile> files) throws RegraNegocioException, IOException {
+		List<Imagem> imagens = new ArrayList<>();
+		imagens = imagemService.create(imagens, files);
 
-		imagem = imagemService.create(imagem);
-
-		HttpHeaders headers = new HttpHeaders();
-
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(imagem.getId())
-				.toUri();
-		headers.setLocation(location);
-
-		return new ResponseEntity<>(new ServiceResponse<>(imagem), headers, HttpStatus.CREATED);
+		return new ResponseEntity<>(new ServiceResponse<>(imagens), HttpStatus.CREATED);
 	}
 
 	@ApiOperation(value = "Detalha uma imagem pelo ID", notes = "Um ID válido deve ser informado", response = Imagem.class)

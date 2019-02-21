@@ -1,11 +1,15 @@
 package com.dropshipping.imagens;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dropshipping.exception.RegraNegocioException;
 import com.dropshipping.exception.SampleEntityNotFoundException;
@@ -22,8 +26,14 @@ public class ImagemService {
 	@Autowired
 	ImagemRepository imagemRepository;
 	
-	public Imagem create(Imagem imagem) throws RegraNegocioException{
-		return imagemRepository.save(imagem);
+	public List<Imagem> create(@Valid List<Imagem> imagens, List<MultipartFile> arquivos) throws RegraNegocioException, IOException{
+		for( int i=0; i< arquivos.size(); i++ ) {
+			Imagem imagem = new Imagem();
+			imagem.setNome(arquivos.get(i).getOriginalFilename());
+			imagem.setArquivo(arquivos.get(i).getBytes());
+			imagens.add(imagemRepository.save(imagem));
+		}
+		return imagens;
 	}
 
 	public Imagem update(Imagem imagem) throws RegraNegocioException, SampleEntityNotFoundException {

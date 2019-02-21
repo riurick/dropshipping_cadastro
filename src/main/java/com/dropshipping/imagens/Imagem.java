@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -28,9 +29,11 @@ public class Imagem {
 	private String nome;
 	
 	@NotNull
-	@Size(max = 64)
-	private String arquivo;
+	@Lob
+	private byte[] arquivo;
 	
+	
+
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="produto_id")
 	@Fetch(FetchMode.JOIN)
@@ -57,14 +60,6 @@ public class Imagem {
 		this.nome = nome;
 	}
 
-	public String getArquivo() {
-		return arquivo;
-	}
-
-	public void setArquivo(String arquivo) {
-		this.arquivo = arquivo;
-	}
-
 	public Produto getProduto() {
 		return produto;
 	}
@@ -80,5 +75,13 @@ public class Imagem {
 	public void setPropaganda(Propaganda propaganda) {
 		this.propaganda = propaganda;
 	}
+	public byte[] getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(byte[] arquivo) {
+		this.arquivo = arquivo;
+	}
+	
 	
 }
