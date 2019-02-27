@@ -9,22 +9,29 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.dropshipping.exception.RegraNegocioException;
 import com.dropshipping.exception.SampleEntityNotFoundException;
+import com.dropshipping.produtos.Produto;
+import com.dropshipping.produtos.ProdutoRepository;
 import com.dropshipping.service.MessagesService;
 
 @Service
 public class ImagemService {
 	
 	public static final String IMAGEM_NAO_ECONTRADO = "imagem.naoEncontrada";
+	public static final String PRODUTO_NAO_ENCONTRADO = "produto.naoEncontrado";
 	
 	@Autowired
 	MessagesService messages;
 	
 	@Autowired
 	ImagemRepository imagemRepository;
+	
+	@Autowired
+	ProdutoRepository produtoRepository;
 	
 	public List<Imagem> create(@Valid List<Imagem> imagens, List<MultipartFile> arquivos) throws RegraNegocioException, IOException{
 		for( int i=0; i< arquivos.size(); i++ ) {
@@ -64,5 +71,14 @@ public class ImagemService {
 
 	public List<Imagem> getAll() {
 		return imagemRepository.findAll();
+	}
+	
+	@Transactional
+	public List<Imagem> buscaPorProduto(Integer id) throws SampleEntityNotFoundException {
+		Optional<Produto> op = produtoRepository.findById(id);
+		if(!op.isPresent()) {
+			throw new SampleEntityNotFoundException(messages.get(PRODUTO_NAO_ENCONTRADO));
+		}
+		return imagemRepository.findByProduto(op.get());
 	}
 }

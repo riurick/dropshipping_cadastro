@@ -8,8 +8,11 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -90,5 +93,20 @@ public class ImagemController {
 		ServiceMessage message = new ServiceMessage(messages.get(IMAGEM_DELETADO));
 
 		return new ResponseEntity<>(new ServiceResponse<>(message), HttpStatus.OK);
+	}
+	@GetMapping("buscarPorProduto/{id}")
+	@ApiOperation(value= "Busca lista de imagens por produto", response = Imagem.class)
+	ServiceResponse<List<Imagem>> buscaPorProduto(@PathVariable Integer id)throws SampleEntityNotFoundException {
+		return new ServiceResponse<>(imagemService.buscaPorProduto(id));
+	}
+		
+	@GetMapping("/arquivo/{id}")
+	@ApiOperation(value= "Busca lista de imagens por produto", response = Imagem.class)
+	public ResponseEntity<Resource> buscaPorImagemId(@PathVariable Integer id) throws SampleEntityNotFoundException{
+		Imagem imagens = imagemService.findById(id);
+		 return ResponseEntity.ok()
+	                .contentType(MediaType.IMAGE_JPEG)
+	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + imagens.getNome() + "\"")
+	                .body(new ByteArrayResource(imagens.getArquivo()));
 	}
 }

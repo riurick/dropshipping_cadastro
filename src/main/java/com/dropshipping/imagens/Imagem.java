@@ -31,8 +31,6 @@ public class Imagem {
 	@NotNull
 	@Lob
 	private byte[] arquivo;
-	
-	
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="produto_id")
