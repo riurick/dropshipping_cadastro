@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dropshipping.enderecos.EnderecoRepository;
@@ -18,6 +20,7 @@ public class FornecedorService {
 	public static final String FORNECEDOR_NAO_ECONTRADO = "fornecedor.naoEncontrado";
 	public static final String CNPJ_JA_CADASTRADO = "cnpj.jaCadastrado";
 	public static final String CNPJ_INVALIDO = "cnpj.invalido";
+	public static final String FORNECEDOR_INVALIDO = "fornecedor.invalido";
 
 	@Autowired
 	FornecedorRepository fornecedorRepository;
@@ -28,10 +31,18 @@ public class FornecedorService {
 	@Autowired
 	MessagesService messages;
 	
+	private PasswordEncoder enconder;
+	
+	public FornecedorService() {
+		super();
+		enconder = new BCryptPasswordEncoder();
+	}
+
 	public Fornecedor create(Fornecedor fornecedor) throws RegraNegocioException{
 		validaFornecedor(fornecedor);
 		//Cadastrando endereço
 		fornecedor.setEndereco(enderecoRepository.save(fornecedor.getEndereco()));
+		fornecedor.setSenha(enconder.encode(fornecedor.getSenha()));
 		return fornecedorRepository.save(fornecedor);
 	}
 
@@ -40,6 +51,7 @@ public class FornecedorService {
 		validaFornecedor(fornecedor);
 		if (existing.isPresent()) {
 			enderecoRepository.save(fornecedor.getEndereco());
+			fornecedor.setSenha(enconder.encode(fornecedor.getSenha()));
 			return fornecedorRepository.save(fornecedor);
 		} else {
 			throw new SampleEntityNotFoundException(messages.get(FORNECEDOR_NAO_ECONTRADO));
@@ -75,6 +87,14 @@ public class FornecedorService {
 		if(!ValidaCNPJ.isCNPJ(fornecedor.getCnpj())) {
 			throw new RegraNegocioException(CNPJ_INVALIDO);
 		}
+	}
+
+	public Fornecedor login(String email, String senha) throws SampleEntityNotFoundException {
+		Optional<Fornecedor> op = fornecedorRepository.login(email, senha);
+		if(!op.isPresent()) {
+			throw new SampleEntityNotFoundException(messages.get(FORNECEDOR_INVALIDO));
+		}
+		return op.get();
 	}
 
 }

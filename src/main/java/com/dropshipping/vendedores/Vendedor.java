@@ -7,20 +7,16 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.dropshipping.usuario.Usuario;
+
 @Entity
-public class Vendedor {
+public class Vendedor extends Usuario{
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
 	
 	@NotNull
 	@Size(max = 50)
 	private String nome;
 	
-	@NotNull
-	@Size(max = 50)
-	private String email;
 	
 	@Size(max = 12)
 	private String telefone;
@@ -29,9 +25,6 @@ public class Vendedor {
 	@Size(max = 11)
 	private String cpf;
 	
-	@NotNull
-	@Size(max = 8)
-	private String senha;
 
 	public String getNome() {
 		return nome;
@@ -41,13 +34,6 @@ public class Vendedor {
 		this.nome = nome;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 	public String getTelefone() {
 		return telefone;
@@ -65,20 +51,6 @@ public class Vendedor {
 		this.cpf = cpf;
 	}
 
-	public String getSenha() {
-		return senha;
-	}
 
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 }

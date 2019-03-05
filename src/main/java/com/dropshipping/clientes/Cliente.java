@@ -14,21 +14,14 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.dropshipping.enderecos.Endereco;
+import com.dropshipping.usuario.Usuario;
 
 @Entity
-public class Cliente {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
+public class Cliente extends Usuario{
 	
 	@NotNull
 	@Size(max = 50)
 	private String nome;
-	
-	@NotNull
-	@Size(max = 50)
-	private String email;
 	
 	@Size(max = 12)
 	private String telefone;
@@ -37,23 +30,11 @@ public class Cliente {
 	@Size(max = 11)
 	private String cpf;
 	
-	@NotNull
-	@Size(max = 8)
-	private String senha;
-	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="endereco_id")
 	@Fetch(FetchMode.JOIN)
 	@NotNull
 	private Endereco endereco;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getNome() {
 		return nome;
@@ -61,14 +42,6 @@ public class Cliente {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getTelefone() {
@@ -85,14 +58,6 @@ public class Cliente {
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
 	}
 
 	public Endereco getEndereco() {

@@ -73,6 +73,12 @@ public class FornecedorController {
 	public ServiceResponse<List<Fornecedor>> listassuntosPaginado() {
 		return new ServiceResponse<>(fornecedorService.getAll());
 	}
+	
+	@GetMapping("/login")
+	@ApiOperation(value="Login de Fornecedor", notes = "Informar e-mail e senha válidos", response = Fornecedor.class)
+	public ResponseEntity<ServiceResponse<Fornecedor>> login(@RequestBody Fornecedor fornecedor) throws SampleEntityNotFoundException {
+		return ResponseEntity.ok( new ServiceResponse<>(fornecedorService.login(fornecedor.getEmail(), fornecedor.getSenha())));
+	}
 
 	@PutMapping("/{id}")
 	@ApiOperation(value = "Altera os dados do fornecedor informado", notes = "Um ID válido deve ser informado", response = Fornecedor.class)
