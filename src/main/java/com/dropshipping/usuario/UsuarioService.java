@@ -18,8 +18,8 @@ public class UsuarioService {
 	@Autowired
 	MessagesService messages;
 	
-	public Usuario login(String email, String senha) throws SampleEntityNotFoundException {
-		Optional<Usuario> op = usuarioRepository.login(email, senha);
+	public Usuario login(String email) throws SampleEntityNotFoundException {
+		Optional<Usuario> op = usuarioRepository.findByEmail(email);
 		if(!op.isPresent()) {
 			throw new SampleEntityNotFoundException(messages.get(USUARIO_INVALIDO));
 		}
