@@ -118,4 +118,11 @@ public class ProdutoController {
 		Page<Produto> page = produtoService.findByFiltro(nome, descricao, marca, pageable);
 		return new ServiceResponse<>(page);
 	}
+	
+	@GetMapping("/listaPorFornecedor/{idFornecedor}")
+	@ApiOperation(value = "Lista produto por Fornecedor", response = Produto.class)
+	public ServiceResponse<List<Produto>> listaPorFornecedor(@PathVariable Integer idFornecedor) throws SampleEntityNotFoundException {
+		return new ServiceResponse<>(produtoService.listaPorFornecedor(idFornecedor));
+	}
+	
 }

@@ -78,4 +78,13 @@ public class ProdutoService {
 		return produtoRepository.findByFornecedor(f, pageable);
 	}
 
+	public List<Produto> listaPorFornecedor(Integer idFornecedor) throws SampleEntityNotFoundException {
+		Optional<Fornecedor> op = fornecedorRepoisoty.findById(idFornecedor);
+		if(!op.isPresent()) {
+			throw new SampleEntityNotFoundException(FORNECEDOR_NAO_ENCONTRADO);
+		}
+		
+		return produtoRepository.findByFornecedor(op.get());
+	}
+
 }

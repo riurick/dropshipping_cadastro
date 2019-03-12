@@ -1,5 +1,7 @@
 package com.dropshipping.produtos;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +17,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer>{
 			@Param("marca") String marca, Pageable pageable);
 	
 	Page<Produto> findByFornecedor(Fornecedor fornecedor, Pageable pageable);
+
+	List<Produto> findByFornecedor(Fornecedor fornecedor);
 }
