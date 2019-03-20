@@ -97,4 +97,12 @@ public class FornecedorService {
 		return op.get();
 	}
 
+	public Fornecedor findByEmail(String email) throws SampleEntityNotFoundException {
+		Optional<Fornecedor> op = fornecedorRepository.findByEmail(email);
+		if(!op.isPresent()) {
+			throw new SampleEntityNotFoundException(messages.get(FORNECEDOR_NAO_ECONTRADO));
+		}
+		return op.get();
+	}
+
 }

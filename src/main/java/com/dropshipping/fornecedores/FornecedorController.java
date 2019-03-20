@@ -107,4 +107,10 @@ public class FornecedorController {
 
 		return new ResponseEntity<>(new ServiceResponse<>(message), HttpStatus.OK);
 	}
+	
+	@ApiOperation(value = "Detalha um fornecedor pelo Email", notes = "Um email válido deve ser informado", response = Fornecedor.class)
+	@GetMapping("/getByEmail/{email}")
+	public ResponseEntity<ServiceResponse<Fornecedor>> findByEmail(@PathVariable String email) throws SampleEntityNotFoundException {
+		return ResponseEntity.ok(new ServiceResponse<>(fornecedorService.findByEmail(email)));
+	}
 }
