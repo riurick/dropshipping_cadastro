@@ -78,7 +78,13 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         .httpBasic()
       .and()
         .authorizeRequests()
-          .antMatchers("/api/v1/usuario/login", "/swagger-ui.html#/", "api/v1/produto").permitAll()
+          .antMatchers(
+        		  "/api/v1/usuario/login",
+        		  "/swagger-ui.html#/",
+        		  "api/v1/produto",
+        		  "/api/v1/fornecedor",
+        		  "/api/v1/clientes"
+        		  ).permitAll()
           .anyRequest().authenticated();
 	}
 }

@@ -22,7 +22,7 @@ import com.dropshipping.vendedores.Vendedor;
 @Entity
 public class Solicitacao {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
 	@NotNull

@@ -18,7 +18,7 @@ import com.dropshipping.produtos.Produto;
 @Entity
 public class ProdutoPedido {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
 	@NotNull

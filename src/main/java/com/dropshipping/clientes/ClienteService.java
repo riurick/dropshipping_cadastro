@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dropshipping.enderecos.Endereco;
@@ -32,9 +34,14 @@ public class ClienteService {
 	@Autowired
 	EnderecoRepository enderecoRepository;
 	
-	
+	private PasswordEncoder enconder;
 	@Autowired
 	MessagesService messages;
+	
+	public ClienteService() {
+		super();
+		enconder = new BCryptPasswordEncoder();
+	}
 	
 	public Cliente create(Cliente cliente) throws RegraNegocioException{
 		validaCliente(cliente);
@@ -42,6 +49,7 @@ public class ClienteService {
 		Endereco e = cliente.getEndereco();
 		e = enderecoRepository.save(cliente.getEndereco());
 		cliente.setEndereco(e);
+		cliente.setSenha(enconder.encode(cliente.getSenha()));
 		return clienteRepository.save(cliente);
 	}
 
