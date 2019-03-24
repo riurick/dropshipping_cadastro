@@ -1,5 +1,7 @@
 package com.dropshipping;
 
+import java.security.SecureRandom;
+
 // https://www.baeldung.com/spring-boot-keycloak
 // https://www.baeldung.com/spring-security-method-security
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
@@ -36,7 +39,18 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new PasswordEncoder() {
+			
+			@Override
+			public boolean matches(CharSequence rawPassword, String encodedPassword) {
+				return BCrypt.checkpw(rawPassword.toString(), encodedPassword);
+			}
+			
+			@Override
+			public String encode(CharSequence rawPassword) {
+				return BCrypt.hashpw(rawPassword.toString(), BCrypt.gensalt(4));
+			}
+		};
     }
 	
 	@Bean
@@ -64,7 +78,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         .httpBasic()
       .and()
         .authorizeRequests()
-          .antMatchers("/api/v1/usuario/login", "/swagger-ui.html#/").permitAll()
+          .antMatchers("/api/v1/usuario/login", "/swagger-ui.html#/", "api/v1/produto").permitAll()
           .anyRequest().authenticated();
 	}
 }
