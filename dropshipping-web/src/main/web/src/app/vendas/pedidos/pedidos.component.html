@@ -1,0 +1,12 @@
+<h2 class="text-center">Pedido</h2>
+<ul *ngIf="produtoPedidos">
+    <li *ngFor="let p of produtoPedidos.produtosPedidos">
+        {{ p.produto.nome }} - ${{ p.produto.preco }} x {{ p.quantidade}} pcs.
+    </li>
+</ul>
+<h3 >Total amount: R${{ total }}</h3>
+ 
+<button class="btn btn-primary btn-block" (click)="pagar()" *ngIf="!pago">Pay</button>
+<div class="alert alert-success" role="alert" *ngIf="pago">
+    <strong>Parabéns!</strong> Pedido realizado com sucesso.
+</div>
