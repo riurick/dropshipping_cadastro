@@ -23,6 +23,7 @@ public class UsuarioController {
 	UsuarioService usuarioService;
 	
 	@GetMapping("/login/{email}")
+	@CrossOrigin("*")
 	@ApiOperation(value="Login de Usuario", notes = "Informar e-mail e senha válidos", response = Usuario.class)
 	public ResponseEntity<ServiceResponse<Usuario>> login(@PathVariable String email) throws SampleEntityNotFoundException {
 		return ResponseEntity.ok( new ServiceResponse<>(usuarioService.login(email)));

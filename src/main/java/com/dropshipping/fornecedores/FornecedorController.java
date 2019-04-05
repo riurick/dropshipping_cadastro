@@ -73,17 +73,20 @@ public class FornecedorController {
 
 	@GetMapping
 	@ApiOperation(value = "Lista", response = Fornecedor.class)
+	@CrossOrigin("*")
 	public ServiceResponse<List<Fornecedor>> listassuntosPaginado() {
 		return new ServiceResponse<>(fornecedorService.getAll());
 	}
 	
 	@GetMapping("/login")
+	@CrossOrigin("*")
 	@ApiOperation(value="Login de Fornecedor", notes = "Informar e-mail e senha válidos", response = Fornecedor.class)
 	public ResponseEntity<ServiceResponse<Fornecedor>> login(@RequestBody Fornecedor fornecedor) throws SampleEntityNotFoundException {
 		return ResponseEntity.ok( new ServiceResponse<>(fornecedorService.login(fornecedor.getEmail(), fornecedor.getSenha())));
 	}
 
 	@PutMapping("/{id}")
+	@CrossOrigin("*")
 	@ApiOperation(value = "Altera os dados do fornecedor informado", notes = "Um ID válido deve ser informado", response = Fornecedor.class)
 	public ResponseEntity<ServiceResponse<Fornecedor>> update(@PathVariable Integer id,
 			@Valid @RequestBody Fornecedor fornecedor) throws RegraNegocioException, SampleEntityNotFoundException {
@@ -103,6 +106,7 @@ public class FornecedorController {
 	}
 
 	@DeleteMapping("/{id}")
+	@CrossOrigin("*")
 	@ApiOperation(value = "Apaga um fornecedor pelo id", notes = "Um id válido deve ser informado", response = Fornecedor.class)
 	public ResponseEntity<ServiceResponse<Void>> deleteassunto(@PathVariable Integer id) throws SampleEntityNotFoundException {
 		fornecedorService.delete(id);
@@ -113,6 +117,7 @@ public class FornecedorController {
 	
 	@ApiOperation(value = "Detalha um fornecedor pelo Email", notes = "Um email válido deve ser informado", response = Fornecedor.class)
 	@GetMapping("/getByEmail/{email}")
+	@CrossOrigin("*")
 	public ResponseEntity<ServiceResponse<Fornecedor>> findByEmail(@PathVariable String email) throws SampleEntityNotFoundException {
 		return ResponseEntity.ok(new ServiceResponse<>(fornecedorService.findByEmail(email)));
 	}

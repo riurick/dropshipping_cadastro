@@ -59,17 +59,20 @@ public class ImagemController {
 
 	@ApiOperation(value = "Detalha uma imagem pelo ID", notes = "Um ID válido deve ser informado", response = Imagem.class)
 	@GetMapping("/{id}")
+	@CrossOrigin("*")
 	public ResponseEntity<ServiceResponse<Imagem>> findById(@PathVariable Integer id) throws SampleEntityNotFoundException {
 		return ResponseEntity.ok(new ServiceResponse<>(imagemService.findById(id)));
 	}
 
 	@GetMapping
+	@CrossOrigin("*")
 	@ApiOperation(value = "Lista", response = Imagem.class)
 	public ServiceResponse<List<Imagem>> listaPaginado() {
 		return new ServiceResponse<>(imagemService.getAll());
 	}
 
 	@PutMapping("/{id}")
+	@CrossOrigin("*")
 	@ApiOperation(value = "Altera os dados do imagem informado", notes = "Um ID válido deve ser informado", response = Imagem.class)
 	public ResponseEntity<ServiceResponse<Imagem>> update(@PathVariable Integer id,
 			@Valid @RequestBody Imagem imagem) throws RegraNegocioException, SampleEntityNotFoundException {
@@ -87,6 +90,7 @@ public class ImagemController {
 	}
 
 	@DeleteMapping("/{id}")
+	@CrossOrigin("*")
 	@ApiOperation(value = "Apaga um Imagem pelo id", notes = "Um id válido deve ser informado", response = Imagem.class)
 	public ResponseEntity<ServiceResponse<Void>> deleteassunto(@PathVariable Integer id) throws SampleEntityNotFoundException {
 		imagemService.delete(id);
@@ -95,12 +99,14 @@ public class ImagemController {
 		return new ResponseEntity<>(new ServiceResponse<>(message), HttpStatus.OK);
 	}
 	@GetMapping("buscarPorProduto/{id}")
+	@CrossOrigin("*")
 	@ApiOperation(value= "Busca lista de imagens por produto", response = Imagem.class)
 	ServiceResponse<List<Imagem>> buscaPorProduto(@PathVariable Integer id)throws SampleEntityNotFoundException {
 		return new ServiceResponse<>(imagemService.buscaPorProduto(id));
 	}
 		
 	@GetMapping("/arquivo/{id}")
+	@CrossOrigin("*")
 	@ApiOperation(value= "Busca lista de imagens por produto", response = Imagem.class)
 	public ResponseEntity<Resource> buscaPorImagemId(@PathVariable Integer id) throws SampleEntityNotFoundException{
 		Imagem imagens = imagemService.findById(id);

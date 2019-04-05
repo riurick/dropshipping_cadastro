@@ -69,12 +69,14 @@ public class ClienteController {
 	}
 
 	@GetMapping
+	@CrossOrigin("*")
 	@ApiOperation(value = "Lista", response = Cliente.class)
 	public ServiceResponse<List<Cliente>> lista() {
 		return new ServiceResponse<>(clienteService.getAll());
 	}
 
 	@PutMapping("/{id}")
+	@CrossOrigin("*")
 	@ApiOperation(value = "Altera os dados do cliente informado", notes = "Um ID válido deve ser informado", response = Cliente.class)
 	public ResponseEntity<ServiceResponse<Cliente>> update(@PathVariable Integer id,
 			@Valid @RequestBody Cliente cliente) throws RegraNegocioException, SampleEntityNotFoundException {
@@ -94,6 +96,7 @@ public class ClienteController {
 	}
 
 	@DeleteMapping("/{id}")
+	@CrossOrigin("*")
 	@ApiOperation(value = "Apaga um cliente pelo id", notes = "Um id válido deve ser informado", response = Cliente.class)
 	public ResponseEntity<ServiceResponse<Void>> delete(@PathVariable Integer id) throws SampleEntityNotFoundException {
 		clienteService.delete(id);
