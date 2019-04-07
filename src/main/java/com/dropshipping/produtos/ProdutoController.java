@@ -49,6 +49,7 @@ public class ProdutoController {
 	private MessagesService messages;
 	
 	@PostMapping
+	@CrossOrigin("*")
 	@ApiOperation(value = "Cria um produto")
 	public ResponseEntity<ServiceResponse<Produto>> create(@RequestBody @Valid Produto produto) throws RegraNegocioException, SampleEntityNotFoundException {
 

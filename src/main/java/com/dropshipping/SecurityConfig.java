@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -77,14 +78,14 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
         .httpBasic()
       .and()
-        .authorizeRequests().anyRequest().permitAll();
-          /*.antMatchers(
-        		  "/api/v1/usuario/login",
-        		  "/swagger-ui.html#/",
-        		  "api/v1/produto",
-        		  "/api/v1/fornecedor",
-        		  "/api/v1/clientes"
+        .authorizeRequests()//.anyRequest().permitAll();
+          .antMatchers(
+        		  "/api/v1/usuario/",
+        		  "/api/v1/usuario/token",
+        		  "/swagger-ui.html#/"
         		  ).permitAll()
-          .anyRequest().authenticated();*/
+          .anyRequest().authenticated()
+		.and().csrf()
+	        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 	}
 }

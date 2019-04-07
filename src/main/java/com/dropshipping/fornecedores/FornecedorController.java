@@ -1,8 +1,11 @@
 package com.dropshipping.fornecedores;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,7 @@ public class FornecedorController {
 	private MessagesService messages;
 	
 	@PostMapping
+	@CrossOrigin("*")
 	@ApiOperation(value = "Cria um fornecedor")
 	public ResponseEntity<ServiceResponse<Fornecedor>> create(@RequestBody @Valid Fornecedor fornecedor) throws RegraNegocioException {
 

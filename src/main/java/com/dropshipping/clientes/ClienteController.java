@@ -45,6 +45,7 @@ public class ClienteController {
 	private MessagesService messages;
 	
 	@PostMapping
+	@CrossOrigin("*")
 	@ApiOperation(value = "Cria um cliente")
 	public ResponseEntity<ServiceResponse<Cliente>> create(@RequestBody @Valid Cliente cliente) throws RegraNegocioException {
 
