@@ -49,6 +49,12 @@ public class FornecedorController {
 	@Autowired
 	private MessagesService messages;
 	
+	@GetMapping("/token")
+	 @CrossOrigin("*")
+	  public Map<String,String> token(HttpSession session) {
+	    return Collections.singletonMap("token", session.getId());
+	 }
+	 
 	@PostMapping
 	@CrossOrigin("*")
 	@ApiOperation(value = "Cria um fornecedor")

@@ -1,5 +1,10 @@
 package com.dropshipping.usuario;
 
+import java.util.Collections;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,4 +32,10 @@ public class UsuarioController {
 	public ResponseEntity<ServiceResponse<Usuario>> login(@PathVariable String email) throws SampleEntityNotFoundException {
 		return ResponseEntity.ok( new ServiceResponse<>(usuarioService.login(email)));
 	}
+	
+	@GetMapping("/token")
+	 @CrossOrigin("*")
+	  public Map<String,String> token(HttpSession session) {
+	    return Collections.singletonMap("token", session.getId());
+	 }
 }
