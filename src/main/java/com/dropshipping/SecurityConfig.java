@@ -78,14 +78,14 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
         .httpBasic()
       .and()
-        .authorizeRequests()//.anyRequest().permitAll();
-          .antMatchers(
+        .authorizeRequests().anyRequest().permitAll();
+         /* .antMatchers(
         		  "/api/v1/usuario/",
         		  "/api/v1/usuario/token",
         		  "/swagger-ui.html#/"
         		  ).permitAll()
           .anyRequest().authenticated()
 		.and().csrf()
-	        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+	        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());*/
 	}
 }

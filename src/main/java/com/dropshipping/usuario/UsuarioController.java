@@ -33,6 +33,7 @@ public class UsuarioController {
 		return ResponseEntity.ok( new ServiceResponse<>(usuarioService.login(email)));
 	}
 	
+	
 	@GetMapping("/token")
 	 @CrossOrigin("*")
 	  public Map<String,String> token(HttpSession session) {
