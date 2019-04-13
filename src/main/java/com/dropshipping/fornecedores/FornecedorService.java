@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.dropshipping.enderecos.Endereco;
 import com.dropshipping.enderecos.EnderecoRepository;
 import com.dropshipping.exception.RegraNegocioException;
 import com.dropshipping.exception.SampleEntityNotFoundException;
@@ -60,8 +61,9 @@ public class FornecedorService {
 
 	public void delete(Integer id) throws SampleEntityNotFoundException {
 		try {
+			Endereco e = fornecedorRepository.findById(id).get().getEndereco();
 			fornecedorRepository.deleteById(id);
-			enderecoRepository.delete(fornecedorRepository.findById(id).get().getEndereco());
+			enderecoRepository.delete(e);
 		} catch (EmptyResultDataAccessException e) {
 			throw new SampleEntityNotFoundException(messages.get(FORNECEDOR_NAO_ECONTRADO));
 		}

@@ -66,8 +66,9 @@ public class ClienteService {
 
 	public void delete(Integer id) throws SampleEntityNotFoundException {
 		try {
+			Endereco e = clienteRepository.findById(id).get().getEndereco();
 			clienteRepository.deleteById(id);
-			enderecoRepository.delete(clienteRepository.findById(id).get().getEndereco());
+			enderecoRepository.delete(e);
 		} catch (EmptyResultDataAccessException e) {
 			throw new SampleEntityNotFoundException(messages.get(CLIENTE_NAO_ECONTRADO));
 		}
